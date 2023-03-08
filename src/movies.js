@@ -99,27 +99,22 @@ function bestYearAvg(moviesArray) {
   if (!moviesArray.length) {
     return null;
   }
+  // sort movies by year so that I can use a while loop stsrting by the oldest movie 
   const sortByYear = moviesArray.sort((a, b) => a.year - b.year);
-  let bestYear = {
-    year: sortByYear[0].year,
-    avg: 0
+  //array to store the avg of each year
+  let avgsArray = []
+
+  let checkYear = sortByYear[0].year
+
+  while (checkYear <= sortByYear[sortByYear.length - 1].year) {
+    const yearScores = sortByYear.filter(movie => movie.year === checkYear);
+    if (yearScores.length) {
+      let avg = yearScores.reduce((sum, movieScore) => sum + movieScore.score, 0) / yearScores.length
+      avgsArray.push({year: checkYear, avg: avg})
+    }
+    checkYear++
   }
-  let totalScore = 0;
-  let countByYear = 0;
-  
-  sortByYear.forEach((movie, index) => {
-    
-    if (movie.year === sortByYear[index].year) {
-      totalScore += movie.score
-      countByYear++
-    }
-    else if (movie.year !== sortByYear[index].year && bestYear.avg < totalScore / countByYear) {
-      bestYear.year = movie.year
-      bestYear.avg = totalScore / countByYear
-    }
-    totalScore = 0
-    countByYear = 0
-  })
-  return `The best year was ${bestYear.year} with an average score of ${bestYear.avg}`
-  
+  // sort the array by the highets avg
+  const getBestYear = avgsArray.sort((a,b) => b.avg - a.avg)
+  return `The best year was ${getBestYear[0].year} with an average score of ${getBestYear[0].avg}`
 }
